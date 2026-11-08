@@ -2,10 +2,10 @@
 const $=id=>document.getElementById(id);
 const modes={
 move:{title:"Movement basics",hint:"PRESS W A S D TO MOVE",tasks:[
-{title:"Move forward",desc:"Press W or ↑ to move your character forward.",keys:["w","arrowup"]},
-{title:"Move left",desc:"Press A or ← to move left.",keys:["a","arrowleft"]},
-{title:"Move backward",desc:"Press S or ↓ to move backward.",keys:["s","arrowdown"]},
-{title:"Move right",desc:"Press D or → to move right.",keys:["d","arrowright"]},
+{title:"Move forward",desc:"Press W or ↑ to move your character forward.",keys:["w"]},
+{title:"Move left",desc:"Press A or ← to move left.",keys:["a"]},
+{title:"Move backward",desc:"Press S or ↓ to move backward.",keys:["s"]},
+{title:"Move right",desc:"Press D or → to move right.",keys:["d"]},
 {title:"Move in every direction",desc:"Press W, A, S and D. Try moving diagonally too.",keys:["w","a","s","d"]}
 ]},
 jump:{title:"Jump training",hint:"PRESS SPACE TO JUMP",tasks:[
@@ -15,8 +15,8 @@ jump:{title:"Jump training",hint:"PRESS SPACE TO JUMP",tasks:[
 {title:"Jump and strafe",desc:"Press A, then SPACE, then D.",sequence:["a"," ","d"]}
 ]},
 slide:{title:"Slide & crouch",hint:"PRESS C OR CTRL TO SLIDE",tasks:[
-{title:"Crouch down",desc:"Press C or CTRL to crouch under an obstacle.",keys:["c","control"]},
-{title:"Try the other key",desc:"Press CTRL or C to practice the alternative crouch key.",keys:["control","c"]},
+{title:"Crouch down",desc:"Press C to crouch under an obstacle.",keys:["c"]},
+{title:"Try the other key",desc:"Press CTRL to practice the alternative crouch key.",keys:["control"]},
 {title:"Slide while moving",desc:"Hold SHIFT to run, then press C to slide.",sequence:["shift","c"]},
 {title:"Slide and move",desc:"Press W, then C, then D.",sequence:["w","c","d"]}
 ]},
@@ -62,7 +62,7 @@ function complete(msg){if($("nextBtn").disabled){points+=25;streak++;best=Math.m
 function log(k){keyHistory.push(k);if(keyHistory.length>20)keyHistory.shift();$("keyLog").textContent=keyHistory.slice(-9).map(pretty).join("  ·  ")}
 function move(k){
  let dx=0,dy=0;if(k==="w"||k==="arrowup")dy=-5;if(k==="s"||k==="arrowdown")dy=5;if(k==="a"||k==="arrowleft")dx=-5;if(k==="d"||k==="arrowright")dx=5;
- if(dx||dy){const scale=dx&&dy?.72:1;player.x=Math.max(8,Math.min(92,player.x+dx*scale));player.y=Math.max(14,Math.min(88,player.y+dy*scale));$("player").style.left=player.x+"%";$("player").style.top=player.y+"%";if(mode==="move"){const t=task();if(t.keys.includes(k)){if(t.keys.length===4){if(!seenKeys.has(k)){progress++;seenKeys.add(k)}if(progress>=4)complete("Great movement! You used all four directions.");}else complete("Good move! +25 points");}}}
+ if(dx||dy){const scale=dx&&dy?.72:1;player.x=Math.max(8,Math.min(92,player.x+dx*scale));player.y=Math.max(14,Math.min(88,player.y+dy*scale));$("player").style.left=player.x+"%";$("player").style.top=player.y+"%";if(mode==="move"){const t=task();const action=({arrowup:"w",arrowleft:"a",arrowdown:"s",arrowright:"d"})[k]||k;if(t.keys.includes(action)){if(t.keys.length===4){if(!seenKeys.has(action)){progress++;seenKeys.add(action)}if(progress>=4)complete("Great movement! You used all four directions.");}else complete("Good move! +25 points");}}}
 }
 function handle(k){
  log(k);const t=task();
