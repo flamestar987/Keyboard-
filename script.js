@@ -42,7 +42,7 @@ combo:{title:"Advanced key combos",hint:"FOLLOW THE KEY SEQUENCE",tasks:[
 {title:"Full combo",desc:"Press Q, E, R, F, then G.",sequence:["q","e","r","f","g"]}
 ]},
 quiz:{title:"Gaming key quiz",hint:"CHOOSE THE CORRECT KEY",tasks:[
-{title:"Which key often jumps?",desc:"Choose the common jump key.",quiz:["space","w","e"],answer:"space"},
+{title:"Which key often jumps?",desc:"Choose the common jump key.",quiz:[" ","w","e"],answer:" "},
 {title:"Which key often opens inventory or scoreboard?",desc:"Choose the common menu key.",quiz:["tab","r","c"],answer:"tab"},
 {title:"Which key often pauses a game?",desc:"Choose the common pause/menu key.",quiz:["escape","f","q"],answer:"escape"},
 {title:"Which key often interacts?",desc:"Choose the common interact key.",quiz:["e","x","z"],answer:"e"},
