@@ -41,7 +41,7 @@ quiz:{title:"Gaming key quiz",hint:"PICK THE RIGHT KEY",tasks:[
 {title:"Which key often reloads?",desc:"Choose the common reload key.",quiz:["f","r","x"],answer:"r"}
 ]}
 };
-let mode="move",taskIndex=0,progress=0,sequenceIndex=0,points=0,done=0,streak=0,best=0,player={x:50,y:55},held=new Set(),keyHistory=[];
+let mode="move",taskIndex=0,progress=0,sequenceIndex=0,points=0,done=0,streak=0,best=0,player={x:50,y:55},held=new Set(),seenKeys=new Set(),keyHistory=[];
 const norm=e=>{let k=e.key.toLowerCase();return k===" "?" ":k};
 const pretty=k=>({" ":"SPACE","arrowup":"↑","arrowdown":"↓","arrowleft":"←","arrowright":"→","control":"CTRL","shift":"SHIFT"}[k]||k.toUpperCase());
 const task=()=>modes[mode].tasks[taskIndex];
@@ -62,7 +62,7 @@ function complete(msg){if($("nextBtn").disabled){points+=25;streak++;best=Math.m
 function log(k){keyHistory.push(k);if(keyHistory.length>20)keyHistory.shift();$("keyLog").textContent=keyHistory.slice(-9).map(pretty).join("  ·  ")}
 function move(k){
  let dx=0,dy=0;if(k==="w"||k==="arrowup")dy=-5;if(k==="s"||k==="arrowdown")dy=5;if(k==="a"||k==="arrowleft")dx=-5;if(k==="d"||k==="arrowright")dx=5;
- if(dx||dy){const scale=dx&&dy?.72:1;player.x=Math.max(8,Math.min(92,player.x+dx*scale));player.y=Math.max(14,Math.min(88,player.y+dy*scale));$("player").style.left=player.x+"%";$("player").style.top=player.y+"%";if(mode==="move"){const t=task();if(t.keys.includes(k)){if(t.keys.length===4){if(!held.has(k)){progress++;held.add(k)}if(progress>=4)complete("Great movement! You used all four directions.");}else complete("Good move! +25 points");}}}
+ if(dx||dy){const scale=dx&&dy?.72:1;player.x=Math.max(8,Math.min(92,player.x+dx*scale));player.y=Math.max(14,Math.min(88,player.y+dy*scale));$("player").style.left=player.x+"%";$("player").style.top=player.y+"%";if(mode==="move"){const t=task();if(t.keys.includes(k)){if(t.keys.length===4){if(!seenKeys.has(k)){progress++;seenKeys.add(k)}if(progress>=4)complete("Great movement! You used all four directions.");}else complete("Good move! +25 points");}}}
 }
 function handle(k){
  log(k);const t=task();
@@ -75,11 +75,11 @@ function handle(k){
  if(t.hold){if(k===t.hold){complete("Great! You pressed the sprint key.")}return}
  if(t.holdCombo){if(t.holdCombo.includes(k)){progress++;if(progress>=t.holdCombo.length)complete("Combo complete!")}return}
 }
-window.addEventListener("keydown",e=>{const k=norm(e);if([" ","arrowup","arrowdown","arrowleft","arrowright"].includes(k))e.preventDefault();if(held.has(k))return;held.add(k);if(k==="shift"&&mode==="sprint"&&task().hold==="shift")complete("You're sprinting! Hold SHIFT to run.");if(k==="w"||k==="a"||k==="s"||k==="d"||k.startsWith("arrow"))move(k);handle(k)});
+window.addEventListener("keydown",e=>{const k=norm(e);if([" ","arrowup","arrowdown","arrowleft","arrowright"].includes(k))e.preventDefault();if(held.has(k))return;held.add(k);if(k==="shift"&&mode==="sprint"&&task().hold==="shift")complete("You're sprinting! Hold SHIFT to run.");handle(k)});
 window.addEventListener("keyup",e=>{held.delete(norm(e))});
-$("nextBtn").addEventListener("click",()=>{if($("nextBtn").disabled)return;if(taskIndex===modes[mode].tasks.length-1){done++;feedback("Mode complete! Choose another skill.",true);$("nextBtn").disabled=true;$("nextBtn").textContent="MODE COMPLETE ✓";updateStats();return}taskIndex++;progress=0;sequenceIndex=0;held.clear();draw()});
+$("nextBtn").addEventListener("click",()=>{if($("nextBtn").disabled)return;if(taskIndex===modes[mode].tasks.length-1){done++;feedback("Mode complete! Choose another skill.",true);$("nextBtn").disabled=true;$("nextBtn").textContent="MODE COMPLETE ✓";updateStats();return}taskIndex++;progress=0;sequenceIndex=0;held.clear();seenKeys.clear();draw()});
 $("resetBtn").addEventListener("click",()=>{progress=0;sequenceIndex=0;held.clear();player={x:50,y:55};draw()});
-document.querySelectorAll(".mode-card").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.mode;taskIndex=0;progress=0;sequenceIndex=0;held.clear();player={x:50,y:55};document.querySelectorAll(".mode-card").forEach(x=>x.classList.toggle("active",x===b));draw()}));
+document.querySelectorAll(".mode-card").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.mode;taskIndex=0;progress=0;sequenceIndex=0;held.clear();seenKeys.clear();player={x:50,y:55};document.querySelectorAll(".mode-card").forEach(x=>x.classList.toggle("active",x===b));draw()}));
 $("startBtn").addEventListener("click",()=>$("training").scrollIntoView({behavior:"smooth"}));
 document.querySelectorAll("[data-touch]").forEach(b=>{const k=b.dataset.touch==="space"?" ":b.dataset.touch;b.addEventListener("pointerdown",e=>{e.preventDefault();if(k===" "){handle(k);$("player").animate([{transform:"translate(-50%,-50%) translateY(0)"},{transform:"translate(-50%,-50%) translateY(-55px)"},{transform:"translate(-50%,-50%) translateY(0)"}],{duration:420})}else{move(k);handle(k)}})});
 draw();
