@@ -67,5 +67,15 @@ $("resetBtn").addEventListener("click",()=>{player={x:50,y:55};render();});
 document.querySelectorAll(".mode-card").forEach(b=>b.addEventListener("click",()=>{const chosen=b.dataset.mode;if(!modes[chosen])return;mode=chosen;index=0;player={x:50,y:55};held.clear();document.querySelectorAll(".mode-card").forEach(x=>x.classList.toggle("active",x===b));render();$("gamePanel").scrollIntoView({behavior:"smooth",block:"start"});}));
 $("startBtn").addEventListener("click",()=>$("training").scrollIntoView({behavior:"smooth",block:"start"}));
 document.querySelectorAll("[data-touch]").forEach(b=>b.addEventListener("pointerdown",e=>{e.preventDefault();const k=b.dataset.touch==="space"?" ":b.dataset.touch;log("TOUCH "+pretty(k));if(["w","a","s","d"].includes(k))move(k);mark(k);}));
+
+document.querySelectorAll(".mode-card").forEach(card=>{
+ card.addEventListener("pointermove",e=>{
+  if(e.pointerType==="touch")return;
+  const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+  card.style.setProperty("--tilt-x",((.5-y)*8).toFixed(2)+"deg");
+  card.style.setProperty("--tilt-y",((x-.5)*10).toFixed(2)+"deg");
+ });
+ card.addEventListener("pointerleave",()=>{card.style.setProperty("--tilt-x","0deg");card.style.setProperty("--tilt-y","0deg");});
+});
 render();
 })();
