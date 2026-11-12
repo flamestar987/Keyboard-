@@ -11,3 +11,37 @@
 .mini-metrics{display:flex;gap:18px;margin-top:13px;padding-top:10px;border-top:1px solid #30445e}.mini-metrics span{font-size:8px;color:#91a7c0;letter-spacing:1px}.mini-metrics b{display:block;color:#6de5c5;font-size:13px;margin-top:4px}
 .mouse-note{font-size:9px;color:#8ca3bb}.reference-group{margin:18px 0 26px}.reference-group h3{font-family:'Barlow Condensed';font-size:22px;text-transform:uppercase;letter-spacing:1px;color:#b8cbe0;margin:0 0 12px}.reference-foot{font-size:10px;color:#8e9bb2;line-height:1.6}.mouse-reference{display:grid;grid-template-columns:180px 1fr;gap:18px;background:#111d30;border:1px solid var(--line);padding:18px;border-radius:12px}.mouse-illustration{display:grid;place-items:center;min-height:190px;background:radial-gradient(circle,#213b58,#111d30 70%);border-radius:10px}.mouse-shape{position:relative;width:84px;height:132px;border:3px solid #7893b4;border-radius:45px 45px 35px 35px;background:linear-gradient(110deg,#263e5b,#13233a);box-shadow:0 10px 25px #0006}.mouse-shape:before{content:"";position:absolute;left:50%;top:0;height:43px;border-left:2px solid #7893b4}.mouse-left,.mouse-right{position:absolute;top:5px;width:38px;height:34px}.mouse-left{left:2px;border-right:1px solid #7893b4;border-radius:35px 0 0 0;background:#398cbd55}.mouse-right{right:2px;border-radius:0 35px 0 0;background:#a78bfa33}.mouse-wheel{position:absolute;left:50%;top:19px;transform:translateX(-50%);width:7px;height:17px;border-radius:5px;background:#76f1d7;box-shadow:0 0 10px #76f1d7}.mouse-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.mouse-list>div{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:10px;background:#192a40;border:1px solid #2c415d;border-radius:8px}.mouse-list b{font-size:10px;color:#6de5c5;letter-spacing:.7px}.mouse-list span{font-size:10px;color:#b4c4d7}
 @media(max-width:650px){.mouse-reference{grid-template-columns:1fr}.mouse-illustration{min-height:150px}.mouse-shape{transform:scale(.8)}.mouse-list{grid-template-columns:1fr 1fr}.mouse-note{display:none}}
+
+
+/* KEYQUEST polish, entrance motion and responsive interaction states */
+body{overflow-x:hidden}
+.shell{animation:app-enter .72s cubic-bezier(.2,.8,.2,1) both}
+.hero>div:first-child{animation:hero-copy .7s .08s both}
+.hero-keys{animation:hero-keys-in .9s .12s both}
+.stats{animation:rise-in .65s .18s both}
+.training,.game-panel,.cheatsheet{animation:rise-in .7s .22s both}
+.mode-card{position:relative;overflow:hidden;min-height:78px;transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease}
+.mode-card:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 20%,#ffffff0b 48%,transparent 72%);transform:translateX(-130%);transition:transform .55s ease;pointer-events:none}
+.mode-card:hover:before{transform:translateX(130%)}
+.mode-card:hover{box-shadow:0 12px 28px #0004}
+.mode-card.active{border-color:#5ac6ff;background:linear-gradient(125deg,#1b3652,#182943);box-shadow:0 0 0 1px #56b6ff25,0 10px 30px #348fff18}
+.mode-card.active .arrow{color:var(--cyan)}
+.primary,.next-btn,.small-btn,.touch-pad button{transition:transform .16s ease,filter .16s ease,box-shadow .16s ease}
+.primary:hover,.next-btn:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.1);box-shadow:0 12px 32px #438bff55}
+.primary:active,.next-btn:active,.small-btn:active,.touch-pad button:active{transform:translateY(1px) scale(.98)}
+button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.game-panel{box-shadow:0 18px 50px #0003}
+.arena{box-shadow:inset 0 0 45px #07111c66}
+.arena.mouse-mode{cursor:crosshair}
+.arena.mouse-mode .target{animation:pulse 1.15s infinite}
+.needed-keys .keycap{animation:key-pop .24s both}
+.feedback.good{box-shadow:inset 3px 0 #5be0ad}
+#nextBtn:not(:disabled){animation:next-glow 1.8s ease-in-out infinite}
+@keyframes app-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hero-copy{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:translateX(0)}}
+@keyframes hero-keys-in{from{opacity:0;transform:translateY(15px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes rise-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes key-pop{from{opacity:0;transform:translateY(5px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes next-glow{50%{box-shadow:0 0 22px #4daeff55}}
+@media(max-width:800px){.mode-card{min-height:72px}.game-panel{scroll-margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
