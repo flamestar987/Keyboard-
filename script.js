@@ -67,12 +67,34 @@ modes.numbers.tasks.push(
  {title:"Function key run",desc:"Press F2, F4, F6, F8, F10, F12.",sequence:["f2","f4","f6","f8","f10","f12"]}
 );
 let mode="move",index=0,score=0,done=0,streak=0,best=0,player={x:50,y:55},seen=new Set(),seq=0,held=new Set(),wrong=0,total=0,reaction=0,started=performance.now(),holdStart=0,drag=null,lastTrack=null,track=0,complete=false;
+let difficultyMultiplier=1, difficultyName="STANDARD";
+const KEYQUEST_ADVANCED_SYSTEM=true;
+const savedProfile=(()=>{try{return JSON.parse(localStorage.getItem("keyquest-profile")||"{}");}catch(_){return {};}})();
+score=Number(savedProfile.xp)||0;best=Number(savedProfile.best)||0;done=Number(savedProfile.completed)||0;
+function saveProfile(){try{localStorage.setItem("keyquest-profile",JSON.stringify({xp:score,best,completed:done}));}catch(_){}}
+function rankFor(xp){if(xp>=5000)return "LEGEND";if(xp>=2500)return "MASTER";if(xp>=1200)return "ELITE";if(xp>=500)return "PRO";if(xp>=150)return "ROOKIE II";return "ROOKIE";}
+function updateAdvancedHud(){
+ const xpNow=score,rank=rankFor(xpNow),threshold=[0,150,500,1200,2500,5000].filter(n=>n<=xpNow).pop()||0,next=[150,500,1200,2500,5000,7500].find(n=>n>xpNow)||7500;
+ const bar=document.getElementById("xpProgress");if(bar)bar.style.width=Math.min(100,((xpNow-threshold)/(next-threshold))*100)+"%";
+ const rankEl=document.getElementById("rankValue");if(rankEl)rankEl.textContent=rank;
+ const xpEl=document.getElementById("xpValue");if(xpEl)xpEl.textContent=xpNow+" / "+next+" XP";
+ const badgeEl=document.getElementById("badgeValue");if(badgeEl)badgeEl.textContent=(done>=10?"⚡ Combo machine":done>=5?"✦ Rising player":done>=1?"✓ First clear":"— Keep training");
+}
+function addAdvancedHud(){
+ if(document.getElementById("advancedHud"))return;
+ const hud=document.createElement("div");hud.id="advancedHud";hud.className="advanced-hud";
+ hud.innerHTML='<div class="advanced-top"><div><span class="task-label">PLAYER RANK</span><strong id="rankValue">ROOKIE</strong></div><div><span class="task-label">XP PROGRESS</span><strong id="xpValue">0 XP</strong></div><div><span class="task-label">ACHIEVEMENT</span><strong id="badgeValue">— Keep training</strong></div><label class="difficulty-control">DIFFICULTY <select id="difficultySelect" aria-label="Training difficulty"><option value="1">STANDARD · 1× XP</option><option value="1.5">PRO · 1.5× XP</option><option value="2">ELITE · 2× XP</option></select></label></div><div class="xp-track"><span id="xpProgress"></span></div><p class="advanced-note">Your progress saves on this device. Higher difficulty earns more XP.</p>';
+ const panel=document.getElementById("gamePanel"),arena=panel&&panel.querySelector(".arena-wrap");if(arena)panel.insertBefore(hud,arena);
+ const select=hud.querySelector("#difficultySelect");select.addEventListener("change",()=>{difficultyMultiplier=Number(select.value)||1;difficultyName=select.options[select.selectedIndex].text.split(" ·")[0];say(difficultyName+" difficulty selected.");});
+ updateAdvancedHud();
+}
 const task=()=>modes[mode].tasks[index];
-function stats(){$("scoreStat").textContent=score;$("doneStat").textContent=done;$("streakStat").textContent=best;$("accuracyStat").textContent=(total?Math.round((total-wrong)/total*100):100)+"%";$("reactionStat").textContent=reaction?Math.round(reaction)+"ms":"—";$("levelPill").textContent="LEVEL "+(index+1);}
+function stats(){$("scoreStat").textContent=score;$("doneStat").textContent=done;$("streakStat").textContent=best;$("accuracyStat").textContent=(total?Math.round((total-wrong)/total*100):100)+"%";$("reactionStat").textContent=reaction?Math.round(reaction)+"ms":"—";$("levelPill").textContent="LEVEL "+(index+1);if(typeof updateAdvancedHud==="function")updateAdvancedHud();}
 function say(s,good=false){$("feedbackText").textContent=s;$("feedback").classList.toggle("good",good);}
 function log(s){const el=$("keyLog"),a=(el.dataset.items||"").split("|").filter(Boolean);a.push(s);while(a.length>10)a.shift();el.dataset.items=a.join("|");el.textContent=a.join(" · ");}
-function finish(s){if(complete)return;complete=true;reaction=performance.now()-started;const bonus=Math.max(0,Math.round((2500-reaction)/250));score+=25+bonus;streak++;best=Math.max(best,streak);say(s+"  +"+(25+bonus)+" XP",true);$("nextBtn").disabled=false;$("nextBtn").textContent=index===modes[mode].tasks.length-1?"FINISH MODE ✓":"NEXT CHALLENGE →";$("arenaHint").textContent="CHALLENGE COMPLETE";stats();}
+function finish(s){if(complete)return;complete=true;reaction=performance.now()-started;const bonus=Math.max(0,Math.round((2500-reaction)/250));const earned=Math.round((25+bonus)*difficultyMultiplier);score+=earned;streak++;best=Math.max(best,streak);say(s+"  +"+earned+" XP",true);$("nextBtn").disabled=false;$("nextBtn").textContent=index===modes[mode].tasks.length-1?"FINISH MODE ✓":"NEXT CHALLENGE →";$("arenaHint").textContent="CHALLENGE COMPLETE";saveProfile();stats();}
 function render(){
+addAdvancedHud();
 const t=task();complete=false;seq=0;seen.clear();track=0;lastTrack=null;drag=null;holdStart=0;started=performance.now();
 $("gameTitle").textContent=modes[mode].title;$("taskTitle").textContent=t.title;$("taskDesc").textContent=t.desc;$("arenaHint").textContent=modes[mode].hint;$("progressText").textContent=(index+1)+" / "+modes[mode].tasks.length+" tasks";
 const keys=t.quiz||t.sequence||t.keys||(t.hold?[t.hold]:t.type? [t.type]:[]);
@@ -109,7 +131,7 @@ arena.addEventListener("contextmenu",e=>{e.preventDefault();if(mode==="mouse"&&t
 arena.addEventListener("auxclick",e=>{if(mode==="mouse"&&task().type==="click"&&e.button===1){log("MIDDLE CLICK");finish("Middle click registered!");}});
 arena.addEventListener("dblclick",()=>{if(mode==="mouse"&&task().type==="double"){log("DOUBLE CLICK");finish("Double click detected!");}});
 arena.addEventListener("wheel",e=>{if(mode!=="mouse")return;e.preventDefault();const d=e.deltaY<0?"up":"down";log("WHEEL "+d.toUpperCase());if(task().type==="wheel"&&task().direction===d)finish("Wheel "+d+" detected!");},{passive:false});
-$("nextBtn").addEventListener("click",()=>{if(!complete)return;if(index===modes[mode].tasks.length-1){done++;say("Mode complete! Choose another training mode.",true);$("nextBtn").disabled=true;$("nextBtn").textContent="MODE COMPLETE ✓";stats();return;}index++;render();});
+$("nextBtn").addEventListener("click",()=>{if(!complete)return;if(index===modes[mode].tasks.length-1){done++;saveProfile();updateAdvancedHud();say("Mode complete! Choose another training mode.",true);$("nextBtn").disabled=true;$("nextBtn").textContent="MODE COMPLETE ✓";stats();return;}index++;render();});
 $("resetBtn").addEventListener("click",()=>{player={x:50,y:55};render();});
 document.querySelectorAll(".mode-card").forEach(b=>b.addEventListener("click",()=>{const chosen=b.dataset.mode;if(!modes[chosen])return;mode=chosen;index=0;player={x:50,y:55};held.clear();document.querySelectorAll(".mode-card").forEach(x=>x.classList.toggle("active",x===b));render();$("gamePanel").scrollIntoView({behavior:"smooth",block:"start"});}));
 $("startBtn").addEventListener("click",()=>$("training").scrollIntoView({behavior:"smooth",block:"start"}));
