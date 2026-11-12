@@ -29,6 +29,43 @@ numbers:{title:"Numbers & function keys",hint:"PRACTISE NUMBER ROW AND F KEYS",t
 mouse:{title:"Complete mouse training",hint:"USE YOUR MOUSE INSIDE THE ARENA",tasks:[{title:"Aim at the target",desc:"Move your pointer onto the glowing target.",type:"aim"},{title:"Left click",desc:"Left-click inside the arena.",type:"click",button:0},{title:"Right click",desc:"Right-click inside the arena.",type:"click",button:2},{title:"Middle click",desc:"Click the mouse wheel inside the arena.",type:"click",button:1},{title:"Scroll up",desc:"Scroll upward over the arena.",type:"wheel",direction:"up"},{title:"Scroll down",desc:"Scroll downward over the arena.",type:"wheel",direction:"down"},{title:"Double click",desc:"Double-click inside the arena.",type:"double"},{title:"Drag",desc:"Click and drag at least 25 pixels.",type:"drag"}]},
 precision:{title:"Mouse precision lab",hint:"AIM · CLICK · TRACK",tasks:[{title:"Target practice",desc:"Move onto the glowing target.",type:"aim"},{title:"Bullseye",desc:"Click directly on the glowing target.",type:"targetclick"},{title:"Fast target click",desc:"Click the target again as quickly as possible.",type:"targetclick"},{title:"Smooth tracking",desc:"Move your pointer around the arena for two seconds.",type:"track"}]}
 };
+
+// Extended campaign: longer stages with multi-step skill checks.
+modes.move.tasks.push(
+ {title:"Sprint forward",desc:"Hold SHIFT and press W.",sequence:["shift","w"]},
+ {title:"Strafe and retreat",desc:"Press A, S, then D.",sequence:["a","s","d"]},
+ {title:"Full movement circuit",desc:"Press W, D, S, A twice.",sequence:["w","d","s","a","w","d","s","a"]},
+ {title:"Precision reposition",desc:"Press ↑, ←, ↓, →.",sequence:["arrowup","arrowleft","arrowdown","arrowright"]},
+ {title:"Movement mastery",desc:"Complete the long combo: W, W, A, D, S, SPACE.",sequence:["w","w","a","d","s"," "]}
+);
+modes.jump.tasks.push(
+ {title:"Crouch then jump",desc:"Press C, then SPACE.",sequence:["c"," "]},
+ {title:"Sprint-jump-strike",desc:"Press SHIFT, W, SPACE, then F.",sequence:["shift","w"," ","f"]},
+ {title:"Air control",desc:"Press SPACE, A, then D.",sequence:[" ","a","d"]},
+ {title:"Advanced parkour",desc:"Press W, SPACE, D, SPACE, A.",sequence:["w"," ","d"," ","a"]},
+ {title:"Parkour finale",desc:"Press SHIFT, W, SPACE, A, SPACE, D, then C.",sequence:["shift","w"," ","a"," ","d","c"]}
+);
+modes.slide.tasks.push(
+ {title:"Slide and recover",desc:"Press CTRL, then SPACE.",sequence:["control"," "]},
+ {title:"Dodge left and right",desc:"Press A, D, A, D.",sequence:["a","d","a","d"]},
+ {title:"Crouch combo",desc:"Press C, CTRL, then W.",sequence:["c","control","w"]},
+ {title:"Slide challenge",desc:"Press SHIFT, CTRL, W, then SPACE.",sequence:["shift","control","w"," "]}
+);
+modes.combo.tasks.push(
+ {title:"Rapid item cycle",desc:"Press 1, 3, 5, 2, 4, 6.",sequence:["1","3","5","2","4","6"]},
+ {title:"Movement + action",desc:"Press W, A, E, D, F, then R.",sequence:["w","a","e","d","f","r"]},
+ {title:"Ultimate combo",desc:"Press CTRL, SHIFT, W, SPACE, Q, E, R.",sequence:["control","shift","w"," ","q","e","r"]},
+ {title:"Long gamer sequence",desc:"Press 2, 4, 6, 8, I, M, TAB, ESC.",sequence:["2","4","6","8","i","m","tab","escape"]}
+);
+modes.actions.tasks.push(
+ {title:"Ability chain",desc:"Press Q, E, F, G, then X.",sequence:["q","e","f","g","x"]},
+ {title:"Chat and menu",desc:"Press T, ENTER, then ESC.",sequence:["t","enter","escape"]},
+ {title:"Full action chain",desc:"Press F, R, Q, E, G, Z, V, B.",sequence:["f","r","q","e","g","z","v","b"]}
+);
+modes.numbers.tasks.push(
+ {title:"Quick slot cycling",desc:"Press 1, 3, 5, 7, 9, 0.",sequence:["1","3","5","7","9","0"]},
+ {title:"Function key run",desc:"Press F2, F4, F6, F8, F10, F12.",sequence:["f2","f4","f6","f8","f10","f12"]}
+);
 let mode="move",index=0,score=0,done=0,streak=0,best=0,player={x:50,y:55},seen=new Set(),seq=0,held=new Set(),wrong=0,total=0,reaction=0,started=performance.now(),holdStart=0,drag=null,lastTrack=null,track=0,complete=false;
 const task=()=>modes[mode].tasks[index];
 function stats(){$("scoreStat").textContent=score;$("doneStat").textContent=done;$("streakStat").textContent=best;$("accuracyStat").textContent=(total?Math.round((total-wrong)/total*100):100)+"%";$("reactionStat").textContent=reaction?Math.round(reaction)+"ms":"—";$("levelPill").textContent="LEVEL "+(index+1);}
@@ -44,7 +81,7 @@ $("nextBtn").disabled=true;$("nextBtn").textContent=index===modes[mode].tasks.le
 $("player").style.left=player.x+"%";$("player").style.top=player.y+"%";$("player").classList.remove("sliding");
 const mm=mode==="mouse"||mode==="precision";$("arena").classList.toggle("mouse-mode",mm);$("target").style.display=mm&&["aim","targetclick","track"].includes(t.type)?"grid":mode==="move"?"grid":"none";$("target").style.left="72%";$("target").style.top="45%";$("mouseTarget").style.opacity="1";stats();
 }
-function move(k){let dx=0,dy=0;if(k==="w"||k==="arrowup")dy=-5;if(k==="s"||k==="arrowdown")dy=5;if(k==="a"||k==="arrowleft")dx=-5;if(k==="d"||k==="arrowright")dx=5;if(dx||dy){const m=dx&&dy?.72:1;player.x=Math.max(8,Math.min(92,player.x+dx*m));player.y=Math.max(14,Math.min(88,player.y+dy*m));$("player").style.left=player.x+"%";$("player").style.top=player.y+"%";}}
+function move(k){let dx=0,dy=0;if(k==="w"||k==="arrowup")dy=-6;if(k==="s"||k==="arrowdown")dy=6;if(k==="a"||k==="arrowleft")dx=-6;if(k==="d"||k==="arrowright")dx=6;if(dx||dy){const m=dx&&dy?.72:1,speed=held.has("shift")?1.65:1;player.x=Math.max(6,Math.min(94,player.x+dx*m*speed));player.y=Math.max(12,Math.min(90,player.y+dy*m*speed));$("player").style.left=player.x+"%";$("player").style.top=player.y+"%";$("player").classList.remove("run","move-burst");void $("player").offsetWidth;$("player").classList.add(held.has("shift")?"run":"move-burst");}}
 function mark(k){const t=task();if(complete||t.type)return;total++;
 if(t.quiz){if(!t.quiz.includes(k)){wrong++;say("Choose one of the keys shown.");}else if(k===t.answer)finish("Correct answer!");else{wrong++;streak=0;say("Not quite — try again.");}stats();return;}
 if(t.hold){if(k===t.hold){holdStart=performance.now();say("Keep holding "+pretty(k)+"…",true);}return;}
@@ -52,6 +89,16 @@ if(t.sequence){if(k===t.sequence[seq]){seq++;say("Good! "+seq+"/"+t.sequence.len
 if(t.keys){if(t.keys.includes(k)){seen.add(k);say("Correct key · "+seen.size+"/"+t.keys.length,true);if(seen.size===t.keys.length)finish("Keyboard drill complete!");}else{wrong++;say("Try one of the highlighted keys.");}}stats();}
 function keyName(e){const c=e.code||"",special={PrintScreen:"printscreen",ScrollLock:"scrolllock",Pause:"pause",ContextMenu:"contextmenu"};if(special[c])return special[c];if(c.startsWith("Numpad")){const n=c.slice(6),map={Decimal:"numpaddecimal",Add:"numpadadd",Subtract:"numpadsubtract",Multiply:"numpadmultiply",Divide:"numpaddivide",Enter:"numpadenter",NumLock:"numlock"};return map[n]||(n.length===1&&n>="0"&&n<="9"?"numpad"+n:e.key.toLowerCase());}if(e.key===" ")return " ";if(e.key==="Meta")return "meta";return e.key.toLowerCase();}
 window.addEventListener("keydown",e=>{const k=keyName(e);if([" ","ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Tab"].includes(e.key))e.preventDefault();if(held.has(k))return;held.add(k);log(pretty(k));if(["w","a","s","d","arrowup","arrowdown","arrowleft","arrowright"].includes(k))move(k);if(k===" ")$("player").animate([{transform:"translate(-50%,-50%) translateY(0)"},{transform:"translate(-50%,-50%) translateY(-48px)"},{transform:"translate(-50%,-50%) translateY(0)"}],{duration:380});const symbols="!@#$%^&*()_+{}:"+String.fromCharCode(34)+"<>?~";if(k==="shift"&&task().keys&&task().keys.some(x=>symbols.includes(x)))return;mark(mode==="move"?({arrowup:"w",arrowdown:"s",arrowleft:"a",arrowright:"d"}[k]||k):k);});
+
+// Visible character reactions for game-style action binds.
+window.addEventListener("keydown",e=>{
+ const k=keyName(e),p=$("player");
+ const act={c:"slide",control:"slide",e:"interact",f:"strike",q:"ability",g:"ability",r:"reload",x:"ability",z:"ability",v:"look",b:"taunt"};
+ if(act[k]){p.classList.remove("slide","interact","strike","ability","reload","look","taunt");void p.offsetWidth;p.classList.add(act[k]);}
+ if(/^[0-9]$/.test(k)){p.dataset.slot=k;p.classList.remove("slot-flash");void p.offsetWidth;p.classList.add("slot-flash");}
+ if(k==="shift")p.classList.add("sprinting");
+},true);
+window.addEventListener("keyup",e=>{if(keyName(e)==="shift")$("player").classList.remove("sprinting");});
 window.addEventListener("keyup",e=>{const k=keyName(e);held.delete(k);if(task().hold===k&&holdStart&&performance.now()-holdStart>=(task().duration||500))finish("Great hold — modifier mastered!");holdStart=0;});
 const arena=$("arena");
 arena.addEventListener("pointermove",e=>{const r=arena.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height,t=task();$("mouseTarget").style.left=x*100+"%";$("mouseTarget").style.top=y*100+"%";if((mode==="mouse"||mode==="precision")&&t.type==="aim"&&x>.62&&x<.82&&y>.34&&y<.56)finish("Great aim — target acquired!");if(mode==="precision"&&t.type==="track"&&!complete){if(lastTrack)track+=Math.hypot(e.clientX-lastTrack.x,e.clientY-lastTrack.y);lastTrack={x:e.clientX,y:e.clientY};if(track>500&&performance.now()-started>1800)finish("Smooth tracking! Nice control.");}});
