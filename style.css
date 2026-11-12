@@ -45,3 +45,30 @@ button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 @keyframes next-glow{50%{box-shadow:0 0 22px #4daeff55}}
 @media(max-width:800px){.mode-card{min-height:72px}.game-panel{scroll-margin-top:8px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+
+/* 3D KEYQUEST upgrade */
+:root{--depth-shadow:0 22px 0 #07101b,0 28px 42px #0008}
+.shell{perspective:1400px;transform-style:preserve-3d}
+.hero-keys,.hero-keys .keycap,.keycap{transform-style:preserve-3d}
+.keycap{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 13px;border:1px solid #6684a8;border-bottom:4px solid #263b58;border-radius:10px;background:linear-gradient(145deg,#304968 0%,#172a43 58%,#101d30 100%);color:#eaf6ff;text-shadow:0 1px 0 #0008;box-shadow:inset 0 2px 1px #ffffff20,inset 0 -3px 0 #0004,0 5px 0 #091321,0 9px 14px #0006;transform:translateY(-2px);transition:transform .13s ease,box-shadow .13s ease,border-color .13s ease}
+.keycap:after{content:"";position:absolute;left:5px;right:5px;top:3px;height:35%;border-radius:6px;background:linear-gradient(#ffffff16,transparent);pointer-events:none}
+.keycap:hover{transform:translateY(-5px) rotateX(9deg);border-color:#7ad8ff;box-shadow:inset 0 2px 1px #ffffff25,0 7px 0 #091321,0 14px 22px #0008,0 0 18px #39baff35}
+.keycap:active{transform:translateY(2px);border-bottom-width:1px;box-shadow:inset 0 3px 6px #0007,0 1px 0 #091321}
+.mode-card{transform:perspective(700px) rotateX(2deg) translateZ(0);transform-style:preserve-3d;border:1px solid #3b5575;border-bottom:4px solid #101c2b;background:linear-gradient(145deg,#203650,#111f32);box-shadow:inset 0 1px #ffffff16,0 5px 0 #091321,0 12px 20px #0005}
+.mode-card:hover{transform:perspective(700px) rotateX(0) translateY(-4px) translateZ(8px);border-color:#55c8ff}
+.mode-card.active{transform:perspective(700px) rotateX(0) translateY(-3px) translateZ(10px);border-bottom-color:#2675a8;box-shadow:inset 0 1px #ffffff20,0 4px 0 #0a1b2b,0 15px 30px #168bdb30,0 0 22px #42baff20}
+.game-panel,.training,.cheatsheet,.stats>div{transform-style:preserve-3d}
+.game-panel{border:1px solid #45617f;box-shadow:0 2px 0 #0b1726,0 12px 0 #0a1421,0 22px 48px #0009,inset 0 1px #ffffff16}
+.arena{position:relative;isolation:isolate;overflow:hidden;border:1px solid #476486;background:radial-gradient(ellipse at 50% 40%,#1b3b5b 0%,#10253b 48%,#081522 100%);box-shadow:inset 0 0 0 5px #ffffff06,inset 0 0 65px #020914,0 8px 0 #091421,0 16px 28px #0007;transform:perspective(900px) rotateX(1.2deg);transform-style:preserve-3d}
+.arena:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.23;background-image:linear-gradient(#6bb9ee22 1px,transparent 1px),linear-gradient(90deg,#6bb9ee22 1px,transparent 1px);background-size:32px 32px;transform:perspective(300px) rotateX(8deg) scale(1.2);transform-origin:center}
+.arena:after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(135deg,#ffffff0b,transparent 32%,transparent 72%,#4bb7ff0a)}
+#player{filter:drop-shadow(0 8px 5px #0009);transform:translate(-50%,-50%) translateZ(30px);box-shadow:0 0 24px #42caff66}
+#target{filter:drop-shadow(0 0 14px #43d7ff);transform:translateZ(35px)}
+#mouseTarget{filter:drop-shadow(0 0 12px #5fffc0)}
+.stats>div{border:1px solid #354d69;border-bottom:3px solid #111e2d;background:linear-gradient(145deg,#1c3048,#101c2c);box-shadow:inset 0 1px #ffffff14,0 5px 0 #091321,0 10px 18px #0005;transition:transform .2s ease}
+.stats>div:hover{transform:translateY(-3px) rotateX(5deg)}
+.primary,.next-btn,.small-btn,.touch-pad button{border-bottom:3px solid #123a62;box-shadow:inset 0 1px #ffffff30,0 4px 0 #091523,0 9px 18px #0005}
+.primary:active,.next-btn:active,.small-btn:active,.touch-pad button:active{border-bottom-width:1px;box-shadow:inset 0 3px 7px #0005,0 1px 0 #091523}
+@media(max-width:700px){.arena{transform:none}.mode-card{transform:none}.keycap{min-height:38px;padding:7px 10px}}
+@media(prefers-reduced-motion:reduce){.keycap,.mode-card,.stats>div{transform:none!important}}
