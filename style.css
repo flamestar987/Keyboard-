@@ -169,3 +169,41 @@ footer{border-color:#314760}
 .advanced-note{margin:8px 0 0;color:#8196b1;font-size:9px;letter-spacing:.3px}
 @media(max-width:700px){.advanced-top{grid-template-columns:1fr 1fr}.difficulty-control select{max-width:100%}.advanced-hud{padding:12px}}
 @media(prefers-reduced-motion:reduce){.xp-track span{transition:none}}
+
+
+/* KEYQUEST NEON ARCADE — high-visibility neon pass */
+:root{--neon-cyan:#35f5e0;--neon-blue:#38aaff;--neon-purple:#a56bff;--neon-pink:#ff58d6}
+body{background:radial-gradient(ellipse at 12% 12%,#163e67 0,transparent 32%),radial-gradient(ellipse at 88% 35%,#30205f 0,transparent 30%),#070d19}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.25;background-image:radial-gradient(circle,#5ceeff 1px,transparent 1.7px),radial-gradient(circle,#b58aff 1px,transparent 1.7px);background-size:67px 67px,103px 103px;background-position:0 0,31px 47px;animation:neon-stars 24s linear infinite}
+@keyframes neon-stars{to{background-position:67px 67px,134px 150px}}
+.brand-mark{box-shadow:0 0 12px #46c5ff88,0 0 30px #806bff66}
+.accent,.eyebrow{ text-shadow:0 0 9px #35f5e088}
+.live-dot{animation:live-pulse 1.8s ease-in-out infinite}
+.level-pill{box-shadow:0 0 13px #35f5e022,inset 0 0 12px #35f5e010}
+.gradient{background:linear-gradient(90deg,#42d9ff,#a78bff,#ff67d8,#42d9ff);background-size:240% auto;animation:gradient-flow 6s linear infinite;filter:drop-shadow(0 0 13px #7c70ff55)}
+.primary,.next-btn:not(:disabled){box-shadow:0 0 10px #48b9ff88,0 0 25px #716dff55,0 7px 0 #273d75;transition:transform .2s,filter .2s,box-shadow .2s}
+.primary:hover,.next-btn:not(:disabled):hover{transform:translateY(-3px);filter:brightness(1.16);box-shadow:0 0 16px #48d8ff,0 0 38px #9274ff99,0 9px 0 #273d75}
+.keycap{border-color:#5e9ac7;box-shadow:0 0 9px #42baff35,inset 0 0 13px #6bcaff12,0 8px 18px #0007}
+.hero-keys .keycap{box-shadow:0 0 12px #43baff66,inset 0 0 17px #63caff1b,0 8px 20px #0008}
+.orbit{border-color:#4ccaff88;box-shadow:0 0 13px #45aaff22}
+.stats,.game-panel,.advanced-hud{box-shadow:0 0 0 1px #39c9ff15,0 0 25px #287cff1b,inset 0 0 22px #53cfff08}
+.mode-card{position:relative;overflow:hidden;box-shadow:inset 0 1px #ffffff10,0 7px 17px #0005;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s}
+.mode-card:before{content:"";position:absolute;inset:-1px;pointer-events:none;opacity:0;background:linear-gradient(115deg,transparent 15%,#54eaff22 45%,#b18aff22 65%,transparent 85%);transform:translateX(-65%);transition:opacity .2s,transform .5s}
+.mode-card:hover,.mode-card.active{border-color:#45dfff;box-shadow:0 0 9px #32cfff77,0 0 24px #8c5cff44,inset 0 0 18px #3dcfff12}
+.mode-card:hover:before,.mode-card.active:before{opacity:1;transform:translateX(0)}
+.mode-card.active .mode-icon{box-shadow:0 0 17px currentColor}
+.game-panel{border-color:#3c9bc8;box-shadow:0 0 12px #30bfff55,0 0 38px #655bff2a,inset 0 0 25px #48cfff0b}
+.arena{border-color:#47bce8;box-shadow:0 0 10px #2dbbff66,inset 0 0 35px #41baff18}
+.arena-grid{background-image:linear-gradient(#42dfff30 1px,transparent 1px),linear-gradient(90deg,#42dfff30 1px,transparent 1px)}
+.target{border-color:#43ffe1;color:#8affef;box-shadow:0 0 10px #42ffe1,0 0 32px #42ffe188,inset 0 0 12px #42ffe155}
+.player-head{box-shadow:0 0 0 3px #4c9bc4,0 0 15px #42baffaa}
+.player-body{box-shadow:0 0 15px #35baff88}
+.obstacle{box-shadow:0 0 10px #ffad5d55,0 5px 0 #70452c}
+.task-box,.feedback,.key-log{border-color:#3b6686;box-shadow:inset 0 0 17px #44baff0a}
+.feedback.good{box-shadow:0 0 12px #42e6b955,inset 0 0 14px #42e6b91a}
+.xp-track span{box-shadow:0 0 8px #45dfff,0 0 20px #9a69ff}
+.cheat-grid>div{box-shadow:inset 0 0 15px #48bfff0a,0 5px 14px #0004;transition:transform .2s,border-color .2s,box-shadow .2s}
+.cheat-grid>div:hover{border-color:#47dcff;box-shadow:0 0 10px #39cfff66,0 0 24px #8b65ff33}
+.small-btn{box-shadow:0 0 9px #43baff22}
+.small-btn:hover{border-color:#49dfff;box-shadow:0 0 13px #43baff77}
+@media(prefers-reduced-motion:reduce){body:before,.live-dot,.gradient{animation:none!important}.mode-card,.cheat-grid>div{transition:none!important}}
